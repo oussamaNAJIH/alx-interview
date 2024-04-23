@@ -6,8 +6,8 @@ minOperations(n) module
 
 def minOperations(n):
     """
-     calculates the fewest number of operations needed to
-     result in exactly n H characters in the file
+    calculates the fewest number of operations needed to
+    result in exactly n H characters in the file
     """
     if n <= 0:
         return 0
