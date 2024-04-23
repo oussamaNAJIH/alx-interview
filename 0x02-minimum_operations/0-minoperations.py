@@ -24,4 +24,6 @@ def minOperations(n):
             result += tmp
             num_operations += 1
             continue
-    return num_operations
+    if len(result) == n:
+        return num_operations
+    return 0
