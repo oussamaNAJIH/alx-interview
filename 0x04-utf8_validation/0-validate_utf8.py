@@ -18,34 +18,35 @@ If all bytes are valid according to the UTF-8 encoding rules, return True.
 """
 
 
-# def check_bytes(num):
-#     """
-#     Returns how many bytes needed to represent num
-#     """
-#     ref = 1 << 7
-#     count = 0
-#     while num & ref:
-#         ref >>= 1
-#         count += 1
-#     return count
+def check_bytes(num):
+    """
+    Returns how many bytes needed to represent num in UTF-8 encoding
+    """
+    base = 1 << 7
+    count = 0
+    while base & num:
+        count += 1
+        base >>= 1
+    return count
+
+
 def validUTF8(data):
-    num_bytes = 0
-    for byte in data:
-        byte_bin = bin(byte)[2:].zfill(8)
-        if num_bytes == 0:
-            if byte_bin[0] == '0':
-                continue
-            elif byte_bin[:3] == '110':
-                num_bytes = 2
-            elif byte_bin[:4] == '1110':
-                num_bytes = 3
-            elif byte_bin[:5] == '11110':
-                num_bytes = 4
-            else:
+    """
+    determines if a given data set represents a valid UTF-8 encoding
+    """
+    count = 0
+    for item in data:
+        if count == 0:
+            count = check_bytes(item)
+            if count == 0:
+                return True
+            if count == 1 or count > 4:
                 return False
-            num_bytes -= 1
+            count -= 1
         else:
-            if not byte_bin.startswith('10'):
+            if check_bytes(item) != 1:
                 return False
-            num_bytes -= 1
-    return num_bytes == 0
+            count -= 1
+    if count == 0:
+        return True
+    return False
