@@ -39,7 +39,7 @@ def validUTF8(data):
         if count == 0:
             count = check_bytes(item)
             if count == 0:
-                return True
+                continue
             if count == 1 or count > 4:
                 return False
             count -= 1
