@@ -21,7 +21,6 @@ request(movieUrl, function (error, response, body) {
 
         completedRequests++;
         if (completedRequests === characters.length) {
-          // All requests have completed, print character names
           characterNames.forEach(name => console.log(name));
         }
       });
