@@ -7,17 +7,26 @@ request(movieUrl, function (error, response, body) {
   if (!error && response.statusCode === 200) {
     const data = JSON.parse(body);
     const characters = data.characters;
+    let completedRequests = 0;
+    const characterNames = [];
+
     for (const characterUrl of characters) {
       request(characterUrl, function (error, response, body) {
-        if (!error) {
+        if (!error && response.statusCode === 200) {
           const character = JSON.parse(body);
-          console.log(character.name);
+          characterNames.push(character.name);
         } else {
-          console.log(error);
+          console.error('Error fetching character:', error);
+        }
+
+        completedRequests++;
+        if (completedRequests === characters.length) {
+          // All requests have completed, print character names
+          characterNames.forEach(name => console.log(name));
         }
       });
     }
   } else {
-    console.log(error);
+    console.error('Error fetching movie:', error);
   }
 });
