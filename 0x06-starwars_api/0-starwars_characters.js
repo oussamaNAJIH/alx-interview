@@ -21,7 +21,9 @@ async function main () {
   for (const characterURL of movieData.characters) {
     characterURLS.push(getData(characterURL));
   }
-  const characters = await Promise.all(characterURLS);
+  const characters = await Promise.all(characterURLS).then((values) => {
+    return values;
+  });
   for (const character of characters) {
     console.log(character.name);
   }
