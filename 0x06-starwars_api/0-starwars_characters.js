@@ -1,31 +1,38 @@
 #!/usr/bin/node
 const request = require('request');
-const movieId = parseInt(process.argv[2]);
-const movieUrl = 'https://swapi-api.alx-tools.com/api/films/' + movieId + '/';
 
-request(movieUrl, function (error, response, body) {
-  if (!error && response.statusCode === 200) {
-    const data = JSON.parse(body);
+function getData (url) {
+  return new Promise((resolve, reject) => {
+    request(url, (error, response, body) => {
+      if (error) {
+        reject(error);
+      } else if (response.statusCode !== 200) {
+        reject(new Error(`Request failed with status code: ${response.statusCode}`));
+      } else {
+        resolve(JSON.parse(body));
+      }
+    });
+  });
+}
+
+async function main () {
+  const movieId = parseInt(process.argv[2]);
+  const movieUrl = `https://swapi-api.alx-tools.com/api/films/${movieId}/`;
+
+  try {
+    const data = await getData(movieUrl);
     const characters = data.characters;
-    let completedRequests = 0;
-    const characterNames = [];
+    const characterPromises = characters.map(characterUrl => getData(characterUrl));
 
-    for (const characterUrl of characters) {
-      request(characterUrl, function (error, response, body) {
-        if (!error && response.statusCode === 200) {
-          const character = JSON.parse(body);
-          characterNames.push(character.name);
-        } else {
-          console.error('Error fetching character:', error);
-        }
-
-        completedRequests++;
-        if (completedRequests === characters.length) {
-          characterNames.forEach(name => console.log(name));
-        }
-      });
-    }
-  } else {
-    console.error('Error fetching movie:', error);
+    const characterData = await Promise.all(characterPromises);
+    characterData.forEach(character => {
+      if (character) {
+        console.log(character.name);
+      }
+    });
+  } catch (error) {
+    console.error(error);
   }
-});
+}
+
+main();
