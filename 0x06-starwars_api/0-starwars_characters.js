@@ -13,15 +13,15 @@ async function getData (url) {
   });
 }
 
-function main () {
+async function main () {
   const characterURLS = [];
   const movieId = process.argv[2];
   const movieUrl = `https://swapi-api.alx-tools.com/api/films/${movieId}/`;
-  const movieData = getData(movieUrl);
+  const movieData = await getData(movieUrl);
   for (const characterURL of movieData.characters) {
     characterURLS.push(getData(characterURL));
   }
-  const characters = Promise.all(characterURLS);
+  const characters = await Promise.all(characterURLS);
   for (const character of characters) {
     console.log(character.name);
   }
