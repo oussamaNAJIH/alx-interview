@@ -1,5 +1,13 @@
 #!/usr/bin/python3
+"""
+modeule for makeChange
+"""
+
+
 def makeChange(coins, total):
+    """
+    Return: fewest number of coins needed to meet total
+    """
     if total <= 0:
         return 0
 
