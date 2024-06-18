@@ -3,8 +3,6 @@
 this module if for isWinner function
 """
 
-def isWinner(x, nums):
-    
 
 def isWinner(x, nums):
     """
